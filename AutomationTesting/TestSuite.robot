@@ -17,6 +17,7 @@ ${CURRENCY_DROPDOWN}    xpath=(//div[contains(@class, 'select--wrap--3N7DHe_')])
 ${USD_OPTION}     xpath=//div[contains(@class,'select--item--32FADYB') and contains(., 'USD')]
 ${SAVE_BTN}       css:.es--saveBtn--w8EuBuy
 ${CONFIRMATION}    xpath=//*[contains(text(), 'US')]
+${PRODUCT_PAGE}    https://ar.aliexpress.com/item/1005008894456345.html?spm=a2g0o.productlist.main.1.45bdxFNKxFNKfm&algo_pvid=e48f5c8a-28d6-4800-991d-c9c1bc112e3a&algo_exp_id=e48f5c8a-28d6-4800-991d-c9c1bc112e3a-0&pdp_ext_f=%7B%22order%22%3A%22-1%22%2C%22eval%22%3A%221%22%7D&pdp_npi=4%40dis%21EGP%212609.75%21991.60%21%21%2146.90%2117.82%21%40210156fc17461168307326859e7df9%2112000047105661974%21sea%21EG%210%21ABX&curPageLogUid=0OABUwOn1rGM&utparam-url=scene%3Asearch%7Cquery_from%3A
 
 *** Test Cases ***
 Scenario 1
@@ -53,4 +54,16 @@ Scenario 6
     Wait Until Page Contains Element    ${CONFIRMATION}    ${WAIT_TIMEOUT}
     Reload Page
     sleep    7s
+    Close Browser
+
+Scenario 7
+    Open Browser    ${PRODUCT_PAGE}    ${BROWSER}
+    Maximize Browser Window
+    Wait Until Element Is Visible    css:.magnifier--image--RM17RL2    30s
+    Mouse Over    css:.magnifier--behiver--cY4D2TR
+    Sleep    2s
+    Click Element    css:.magnifier--behiver--cY4D2TR
+    ${style}=    Get Element Attribute    css:.magnifier--image--RM17RL2    style
+    Should Contain    ${style}    transform
+    Capture Page Screenshot
     Close Browser
