@@ -18,6 +18,14 @@ ${USD_OPTION}     xpath=//div[contains(@class,'select--item--32FADYB') and conta
 ${SAVE_BTN}       css:.es--saveBtn--w8EuBuy
 ${CONFIRMATION}    xpath=//*[contains(text(), 'US')]
 ${PRODUCT_PAGE}    https://ar.aliexpress.com/item/1005008894456345.html?spm=a2g0o.productlist.main.1.45bdxFNKxFNKfm&algo_pvid=e48f5c8a-28d6-4800-991d-c9c1bc112e3a&algo_exp_id=e48f5c8a-28d6-4800-991d-c9c1bc112e3a-0&pdp_ext_f=%7B%22order%22%3A%22-1%22%2C%22eval%22%3A%221%22%7D&pdp_npi=4%40dis%21EGP%212609.75%21991.60%21%21%2146.90%2117.82%21%40210156fc17461168307326859e7df9%2112000047105661974%21sea%21EG%210%21ABX&curPageLogUid=0OABUwOn1rGM&utparam-url=scene%3Asearch%7Cquery_from%3A
+${SEARCH_CARD_ITEM}    css=a.search-card-item
+${ADD_TO_CART_BTN}    css=button.add-to-cart--addtocart--Qhoji3M
+${SELECTED_ITEM}    css=img.sku-item--selected--ITGY_EO
+${CART_ICON}      xpath=//a[contains(@href, 'shoppingcart/index.html')]
+${SELECTED_DIV}    css=div[class*="sku-item--selected"]
+${IMAGE}          xpath=.//img
+${CAPTHCHA}       xpath=//iframe[contains(@src, 'recaptcha')]
+${PRODUCT_TITLE}    xpath=//div[contains(@class, 'title--wrap--UUHae_g')]//h1
 
 *** Test Cases ***
 Scenario 1
@@ -32,6 +40,7 @@ Scenario 1
     Click Element    ${SUBMIT_BUTTON}
     Wait Until Page Contains    ${SEARCH_QUERY}    ${WAIT_TIMEOUT}
     Page Should Contain    ${SEARCH_QUERY}
+    sleep    7
     Close Browser
 
 Scenario 6
@@ -67,3 +76,33 @@ Scenario 7
     Should Contain    ${style}    transform
     Capture Page Screenshot
     Close Browser
+
+Scenario 3
+    Open Browser    ${URL}    ${BROWSER}
+    Maximize Browser Window
+    Run Keyword And Ignore Error    Click Element    ${CLOSE_POPUP_BUTTON}
+    Run Keyword And Ignore Error    Click Element    ${ACCEPT_COOKIES_BUTTON}
+    Wait Until Element Is Visible    ${SEARCH_INPUT}    ${WAIT_TIMEOUT}
+    Input Text    ${SEARCH_INPUT}    ${SEARCH_QUERY}
+    Wait Until Element Is Visible    ${SUBMIT_BUTTON}    ${WAIT_TIMEOUT}
+    Click Element    ${SUBMIT_BUTTON}
+    Wait Until Page Contains    ${SEARCH_QUERY}    ${WAIT_TIMEOUT}
+    Page Should Contain    ${SEARCH_QUERY}
+    Wait Until Page Contains Element    ${SEARCH_CARD_ITEM}    ${WAIT_TIMEOUT}
+    ${search_card_items}=    Get WebElements    ${SEARCH_CARD_ITEM}
+    Click Element    ${search_card_items}[0]
+    ${window_handles}=    Get Window Handles
+    ${new_window}=    Set Variable    ${window_handles}[1]
+    Switch Window    ${new_window}
+    ${new_url}=    Get Location
+    Run Keyword And Ignore Error    Wait Until Page Does Not Contain Element    ${CAPTCHA}    30s
+    Wait Until Page Contains Element    ${ADD_TO_CART_BTN}    ${WAIT_TIMEOUT}
+    Click Element    ${ADD_TO_CART_BTN}
+    ${title_item}    Get WebElement    ${PRODUCT_TITLE}
+    ${title_text}    Get Text    ${title_item}
+    Log To Console    Selected item title: ${title_text}
+    Sleep    3
+    Click Element    ${CART_ICON}
+    Sleep    3
+    Page Should Contain Element    xpath=//a[contains(text(), "${title_text}")]
+    [Teardown]    Close Browser
