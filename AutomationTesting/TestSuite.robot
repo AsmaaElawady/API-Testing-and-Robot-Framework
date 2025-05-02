@@ -1,5 +1,7 @@
 *** Settings ***
 Library           SeleniumLibrary
+Library           String
+Library           Collections
 
 *** Variables ***
 ${URL}            https://www.aliexpress.com/
@@ -30,6 +32,14 @@ ${EMAIL}          marwamostafa322@gmail.com
 ${PASSWORD}       1234abcd
 ${MIN_PRICE}      580
 ${MAX_PRICE}      1249
+
+*** Keywords ***
+Extract And Clean Price
+    [Arguments]    ${price_text}
+    ${price_text}=    String.Replace String    ${price_text}    EGP    ""
+    ${price_text}=    String.Replace String    ${price_text}    ,    ""
+    ${cleaned_price}=    Convert To Number    ${price_text}
+    [Return]    ${cleaned_price}
 
 *** Test Cases ***
 Scenario 1
@@ -162,8 +172,8 @@ Scenario 5
     Capture Page Screenshot
     Close Browser
 
-Senario 2
-    Open Browser    ${URL}    ${BROWSER}
+Scenario 2
+    Open Browser    ${URL}    chrome
     Maximize Browser Window
     Wait Until Element Is Visible    css=input.search--keyword--15P08Ji    10s
     Input Text    css=input.search--keyword--15P08Ji    ${SEARCH_QUERY}    5s
@@ -175,18 +185,45 @@ Senario 2
     Wait Until Page Contains    ${SEARCH_QUERY}    10s
     Page Should Contain    ${SEARCH_QUERY}
     # Apply Price Range Filter
-    Wait Until Element Is Visible    css=div.hv_hw    10s
+    Wait Until Element Is Visible    css=div.i0_t    10s
     Input Text    css=input[name="minPrice"]    ${MIN_PRICE}    # Set the minimum price
     Input Text    css=input[name="maxPrice"]    ${MAX_PRICE}    # Set the maximum price
     Click Element    css=span.hv_hy    # Click on the "OK" button
     # Wait for prices to be visible on the page after filtering
     Wait Until Element Contains    css=span.hv_hx    EGP    10s
-    Sleep    10s
-    Wait Until Element Is Visible    css=div.i0_t    30s
-    # Validate that the minPrice and maxPrice fields contain the expected values
-    ${min_price_value}=    Get Value    css=input[name="minPrice"]
-    ${max_price_value}=    Get Value    css=input[name="maxPrice"]
-    # Assert the values of the min and max price fields
-    Should Be Equal As Numbers    ${min_price_value}    ${MIN_PRICE}
-    Should Be Equal As Numbers    ${max_price_value}    ${MAX_PRICE}
+    Sleep    20s
+    # Extract all the <span> elements with the price information
+    ${price_elements}=    Get WebElements    xpath=//span[contains(text(), 'EGP')]
+    Should Not Be Empty    ${price_elements}
+    # Initialize empty list for cleaned prices
+    ${cleaned_prices}=    Create List
+    # Iterate through each price element, clean it, and add it to the list
+    FOR    ${el}    IN    @{price_elements}
+        ${price_text}=    Get Text    ${el}
+        ${price_text}=    Strip String    ${price_text}
+        Log    ${price_text}
+        # Remove "EGP" and trim spaces
+        ${cleaned_price}=    Replace String    ${price_text}    EGP    ${EMPTY}
+        ${cleaned_price}=    Strip String    ${cleaned_price}
+        # Remove commas for numeric conversion
+        ${cleaned_price}=    Replace String    ${cleaned_price}    ,    ${EMPTY}
+        # Skip if empty
+        Run Keyword If    "${cleaned_price}" == "${EMPTY}"    Continue For Loop
+        # Convert to number (now it's just digits, e.g., "438.48")
+        ${price_number}=    Convert To Number    ${cleaned_price}
+        log    ${price_number}
+        # Validate price range
+        Run Keyword If    ${price_number} < ${MIN_PRICE}    Fail    Price ${price_number} is below minimum (${MIN_PRICE})
+        Run Keyword If    ${price_number} > ${MAX_PRICE}    Fail    Price ${price_number} is above maximum (${MAX_PRICE})
+        # Optional: Store for logging
+        Append To List    ${cleaned_prices}    ${price_number}
+    END
+    Log    ${cleaned_prices}    # Log the cleaned prices for debugging
+    # Evaluate each cleaned price
+    FOR    ${price}    IN    @{cleaned_prices}
+        ${cleaned_price}=    Convert To Number    ${price}
+        Log    ${cleaned_price}    # Log each cleaned price for evaluation
+        Run Keyword If    ${cleaned_price} < ${MIN_PRICE}    Fail    Price ${cleaned_price} is below the minimum filter
+        Run Keyword If    ${cleaned_price} > ${MAX_PRICE}    Fail    Price ${cleaned_price} is above the maximum filter
+    END
     Close Browser
