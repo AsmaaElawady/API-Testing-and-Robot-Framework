@@ -24,7 +24,7 @@ ${SELECTED_ITEM}    css=img.sku-item--selected--ITGY_EO
 ${CART_ICON}      xpath=//a[contains(@href, 'shoppingcart/index.html')]
 ${SELECTED_DIV}    css=div[class*="sku-item--selected"]
 ${IMAGE}          xpath=.//img
-${CAPTHCHA}       xpath=//iframe[contains(@src, 'recaptcha')]
+${CAPTCHA}        xpath=//iframe[contains(@src, 'recaptcha')]
 ${PRODUCT_TITLE}    xpath=//div[contains(@class, 'title--wrap--UUHae_g')]//h1
 
 *** Test Cases ***
