@@ -2,7 +2,7 @@
 Library           SeleniumLibrary
 
 *** Variables ***
-${URL}            https://www.aliexpress.com/
+${URL}            https://www.aliexpress.com/?lan=en
 ${BROWSER}        chrome
 ${CLOSE_POPUP_BUTTON}    css=button[class*="close"]
 ${ACCEPT_COOKIES_BUTTON}    css=button[class*="accept-btn"]
@@ -33,21 +33,25 @@ ${MAX_PRICE}      1249
 ${LANG_MENU}      css:div.ship-to--menuItem--WdBDsYl
 ${LANG}           //*[@id="_full_container_header_23_"]/div[2]/div/div[2]/div[2]/div[2]/div[4]/div/div[1]/div
 ${EN_LANG}        //*[@id="_full_container_header_23_"]/div[2]/div/div[2]/div[2]/div[2]/div[4]/div/div[2]/div[2]
+${PRODUCTNAME}    xpath=//h3
 
 *** Test Cases ***
 Scenario 1
-    Open Browser    ${URL}    ${BROWSER}
+    Open Browser    ${URL}    chrome
     Maximize Browser Window
-    Run Keyword And Ignore Error    Click Element    ${CLOSE_POPUP_BUTTON}
-    Run Keyword And Ignore Error    Click Element    ${ACCEPT_COOKIES_BUTTON}
-    Wait Until Element Is Visible    ${SEARCH_INPUT}    ${WAIT_TIMEOUT}
+    Set Selenium Implicit Wait    15s
+    Wait Until Element Is Visible    ${SEARCH_INPUT}    20s
     Input Text    ${SEARCH_INPUT}    ${SEARCH_QUERY}
-    sleep    7
-    Wait Until Element Is Visible    ${SUBMIT_BUTTON}    ${WAIT_TIMEOUT}
+    Wait Until Element Is Visible    ${SUBMIT_BUTTON}    20s
     Click Element    ${SUBMIT_BUTTON}
-    Wait Until Page Contains    ${SEARCH_QUERY}    ${WAIT_TIMEOUT}
     Page Should Contain    ${SEARCH_QUERY}
-    sleep    7
+    Wait Until Page Contains Element    ${PRODUCTNAME}     40s
+    ${product_title}=    Get WebElements    ${PRODUCTNAME}
+    FOR    ${title}    IN    @{product_title}
+        ${text}=    Get Text    ${title}
+        Log    Checking: ${text}
+        Should Match Regexp    ${text.lower()}    .*((smart\s?watch)|(smartwatch)|(ساعة\s?ذكية)|(الساعة\s?الذكية)|(ساعة)).*
+    END
     Close Browser
 
 Scenario 6
@@ -146,7 +150,7 @@ Scenario 5
     Wait Until Element Is Enabled    xpath=//button[span[text()="تسجيل الدخول"]]    10s
     Click Button    xpath=//button[span[text()="تسجيل الدخول"]]
     Log    logged in successfully
-        # Existing steps up to login...
+    # Existing steps up to login...
     Sleep    10s
     # Wait for slide-to-unlock to appear (optional)
     Wait Until Element Is Visible    id=nc_1__scale_text    30s
