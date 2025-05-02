@@ -34,6 +34,7 @@ ${LANG_MENU}      css:div.ship-to--menuItem--WdBDsYl
 ${LANG}           //*[@id="_full_container_header_23_"]/div[2]/div/div[2]/div[2]/div[2]/div[4]/div/div[1]/div
 ${EN_LANG}        //*[@id="_full_container_header_23_"]/div[2]/div/div[2]/div[2]/div[2]/div[4]/div/div[2]/div[2]
 ${PRODUCTNAME}    xpath=//h3
+${PRICEWITHUS}    xpath=//span[contains(text(), '$')]
 
 *** Test Cases ***
 Scenario 1
@@ -55,9 +56,9 @@ Scenario 1
     Close Browser
 
 Scenario 6
-    Open Browser    ${URL}    ${BROWSER}
+    Open Browser    ${URL}    Chrome
     Maximize Browser Window
-    Set Selenium Implicit Wait    15s
+    Set Selenium Implicit Wait    ${WAIT_TIMEOUT}
     ${popup_visible}=    Run Keyword And Return Status    Element Should Be Visible    ${POPUP_SELECTOR}
     Run Keyword If    ${popup_visible}    Click Element    ${POPUP_CLOSE_BTN}
     Sleep    2s
@@ -69,11 +70,18 @@ Scenario 6
     sleep    1s
     Click Element    ${USD_OPTION}
     sleep    1s
-    Wait Until Element Is Visible    ${SAVE_BTN}    ${WAIT_TIMEOUT}
+    Wait Until Element Is Visible    ${SAVE_BTN}    ${WAIT_TIMEOUT} \
     Click Element    ${SAVE_BTN}
-    Wait Until Page Contains Element    ${CONFIRMATION}    ${WAIT_TIMEOUT}
-    Reload Page
+    Wait Until Page Contains Element    ${CONFIRMATION}    timeout=5s
     sleep    7s
+    Wait Until Element Is Visible    ${PRICEWITHUS}    timeout=10s
+    ${price_elements}=    Get WebElements    ${PRICEWITHUS}
+    Should Not Be Empty    ${price_elements}
+    FOR    ${el}    IN    @{price_elements}
+        ${price_text}=    Get Text    ${el}
+        Run Keyword If    '${price_text.strip()}' != ''    Should Contain    ${price_text}    $
+        Log    ${price_text}=
+    END
     Close Browser
 
 Scenario 7
