@@ -74,16 +74,16 @@ Test Number - Method To test    - What to test -   result
 |        |                     | Should return non-empty array of carts                                       | ✅ PASSED |
 | 7      | Get All Carts       | With invalid URL, should return 404 Not Found                                | ✅ PASSED |
 | 8      | Delete Cart         | With valid cart ID, should return 200                                        | ✅ PASSED |
-|        |                     | With valid cart ID, should return the details of this cart                   | ✅ PASSED *(Not added yet)* |
 | 9      | Delete Cart         | With invalid cart ID, should return 400 Bad Request                          | ✅ PASSED |
+
 | 10     | Create User         | When it takes all parameters correctly, it returns 200                       | ✅ PASSED |
 |        |                     | When it takes all parameters correctly, it returns a user ID                 | ✅ PASSED |
 |        |                     | Should return a numeric user ID                                              | ✅ PASSED |
 |        |                     | When a request with missing fields is sent, it returns 400                   | ✅ PASSED |
-|        |                     | Should detect that the password is missing                                   | ✅ PASSED |
+|        | Create User         | Should detect that the there is a missing field                              | ✅ PASSED |
 | 11     | Get All Users       | When the request is valid, it returns status 200                             | ✅ PASSED |
 |        |                     | Should return a non-empty array of users                                     | ✅ PASSED |
-|        |                     | With invalid URL, should return status 404                                   | ✅ PASSED |
+|        | Get All Users       | With invalid URL, should return status 404                                   | ✅ PASSED |
 | 12     | Login User          | With correct username and password, should return status 200                 | ✅ PASSED |
 |        |                     | With valid credentials, should return a token                                | ✅ PASSED |
 |        |                     | When username is missing, should return status 400                           | ✅ PASSED |
