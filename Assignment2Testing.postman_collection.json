@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "6f948047-e1fd-4426-b050-0ae3b0511ddc",
+		"_postman_id": "03e36c90-20f7-42f2-95bf-691d31accfa2",
 		"name": "Assignment2Testing",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "31618473"
+		"_exporter_id": "31523870"
 	},
 	"item": [
 		{
@@ -16,13 +16,14 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Status code is 200\", function () {\r",
-									"    pm.response.to.have.status(200);\r",
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
 									"});\r",
 									"\r",
 									"var jsonData = pm.response.json();\r",
 									"\r",
 									"pm.test(\"Response has cart ID: \" + jsonData.id, function () {\r",
+									"    \r",
 									"    pm.expect(jsonData).to.have.property(\"id\");\r",
 									"});"
 								],
@@ -36,7 +37,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"id\": 1,\r\n  \"userId\": 1,\r\n  \"products\": [\r\n    {\r\n        \"id\": 1,\r\n        \"title\": \"Fjallraven - Foldsack No. 1 Backpack, Fits 15 Laptops\",\r\n        \"price\": 109.95,\r\n        \"description\": \"Your perfect pack for everyday use and walks in the forest. Stash your laptop (up to 15 inches) in the padded sleeve, your everyday\",\r\n        \"category\": \"men's clothing\",\r\n        \"image\": \"https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg\"\r\n    }\r\n    ]\r\n}",
+							"raw": "{\r\n  \"userId\": 1,\r\n  \"date\": \"2025-05-03\",\r\n  \"products\": [\r\n    {\r\n        \"id\": 1,\r\n        \"title\": \"Fjallraven - Foldsack No. 1 Backpack, Fits 15 Laptops\",\r\n        \"price\": 109.95,\r\n        \"description\": \"Your perfect pack for everyday use and walks in the forest. Stash your laptop (up to 15 inches) in the padded sleeve, your everyday\",\r\n        \"category\": \"men's clothing\",\r\n        \"image\": \"https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg\"\r\n    }\r\n    ]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -44,21 +45,16 @@
 							}
 						},
 						"url": {
-							"raw": "https://fakestoreapi.com/carts",
-							"protocol": "https",
+							"raw": "{{storeURL}}carts",
 							"host": [
-								"fakestoreapi",
-								"com"
-							],
-							"path": [
-								"carts"
+								"{{storeURL}}carts"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Create Cart - Bad (no products)",
+					"name": "Create Cart - no products",
 					"event": [
 						{
 							"listen": "test",
@@ -91,21 +87,16 @@
 							}
 						},
 						"url": {
-							"raw": "https://fakestoreapi.com/carts",
-							"protocol": "https",
+							"raw": "{{storeURL}}carts",
 							"host": [
-								"fakestoreapi",
-								"com"
-							],
-							"path": [
-								"carts"
+								"{{storeURL}}carts"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Create Cart - Bad (empty products)",
+					"name": "Create Cart - empty products list",
 					"event": [
 						{
 							"listen": "test",
@@ -138,14 +129,9 @@
 							}
 						},
 						"url": {
-							"raw": "https://fakestoreapi.com/carts",
-							"protocol": "https",
+							"raw": "{{storeURL}}carts",
 							"host": [
-								"fakestoreapi",
-								"com"
-							],
-							"path": [
-								"carts"
+								"{{storeURL}}carts"
 							]
 						}
 					},
@@ -181,14 +167,11 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://fakestoreapi.com/carts/1",
-							"protocol": "https",
+							"raw": "{{storeURL}}carts/1",
 							"host": [
-								"fakestoreapi",
-								"com"
+								"{{storeURL}}carts"
 							],
 							"path": [
-								"carts",
 								"1"
 							]
 						}
@@ -196,7 +179,7 @@
 					"response": []
 				},
 				{
-					"name": "Get Single Cart - Bad",
+					"name": "Get Single Cart - invalid ID",
 					"event": [
 						{
 							"listen": "test",
@@ -216,15 +199,132 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://fakestoreapi.com/carts/90",
-							"protocol": "https",
+							"raw": "{{storeURL}}carts/90",
 							"host": [
-								"fakestoreapi",
-								"com"
+								"{{storeURL}}carts"
 							],
 							"path": [
-								"carts",
 								"90"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All carts",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Non-empty Array\" , function (){\r",
+									"    let arr = pm.response.json();\r",
+									"    pm.expect(arr.length).to.be.above(0);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{storeURL}}carts",
+							"host": [
+								"{{storeURL}}carts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All carts - invalid url",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404, not found\", () => pm.response.to.have.status(404));"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{storeURL}}cartss",
+							"host": [
+								"{{storeURL}}cartss"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Deleted Cart successfully\", () => pm.response.to.have.status(200));"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{storeURL}}carts/1",
+							"host": [
+								"{{storeURL}}carts"
+							],
+							"path": [
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete - invalid ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"del invalid cart ID\", () =>  pm.response.to.have.status(400));"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{storeURL}}carts/xyz",
+							"host": [
+								"{{storeURL}}carts"
+							],
+							"path": [
+								"xyz"
 							]
 						}
 					},
@@ -285,14 +385,9 @@
 							}
 						},
 						"url": {
-							"raw": "https://fakestoreapi.com/users",
-							"protocol": "https",
+							"raw": "{{storeURL}}users",
 							"host": [
-								"fakestoreapi",
-								"com"
-							],
-							"path": [
-								"users"
+								"{{storeURL}}users"
 							]
 						}
 					},
@@ -305,7 +400,10 @@
 							"listen": "test",
 							"script": {
 								"exec": [
+									"\r",
 									"pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));\r",
+									"\r",
+									"\r",
 									"pm.test(\"Non-empty array\", () => {\r",
 									"  const data = pm.response.json();\r",
 									"  pm.expect(data.length).to.be.above(0);\r",
@@ -321,14 +419,37 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://fakestoreapi.com/users",
-							"protocol": "https",
+							"raw": "{{storeURL}}users",
 							"host": [
-								"fakestoreapi",
-								"com"
-							],
-							"path": [
-								"users"
+								"{{storeURL}}users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Users - invalid url",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404, not found\", () => pm.response.to.have.status(404));\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{storeURL}}userss",
+							"host": [
+								"{{storeURL}}userss"
 							]
 						}
 					},
@@ -342,6 +463,8 @@
 							"script": {
 								"exec": [
 									"pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));\r",
+									"\r",
+									"\r",
 									"pm.test(\"Response contains token\", () => {\r",
 									"  const data = pm.response.json();\r",
 									"  pm.expect(data).to.have.property(\"token\");\r",
@@ -366,14 +489,11 @@
 							}
 						},
 						"url": {
-							"raw": "https://fakestoreapi.com/auth/login",
-							"protocol": "https",
+							"raw": "{{storeURL}}auth/login",
 							"host": [
-								"fakestoreapi",
-								"com"
+								"{{storeURL}}auth"
 							],
 							"path": [
-								"auth",
 								"login"
 							]
 						}
@@ -410,14 +530,9 @@
 							}
 						},
 						"url": {
-							"raw": "https://fakestoreapi.com/users",
-							"protocol": "https",
+							"raw": "{{storeURL}}users",
 							"host": [
-								"fakestoreapi",
-								"com"
-							],
-							"path": [
-								"users"
+								"{{storeURL}}users"
 							]
 						}
 					},
@@ -430,8 +545,8 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"UserName or Password is wrong. \", function () {\r",
-									"    pm.expect(pm.response.code).to.eql(401);\r",
+									"pm.test(\"Username not provided\", function () {\r",
+									"    pm.expect(pm.response.code).to.eql(400);\r",
 									"});\r",
 									""
 								],
@@ -445,7 +560,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"username\": 123,\r\n  \"password\": \"pass123\"\r\n}",
+							"raw": "{\r\n  \"username\": \"\",\r\n  \"password\": \"pass123\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -453,14 +568,11 @@
 							}
 						},
 						"url": {
-							"raw": "https://fakestoreapi.com/auth/login",
-							"protocol": "https",
+							"raw": "{{storeURL}}auth/login",
 							"host": [
-								"fakestoreapi",
-								"com"
+								"{{storeURL}}auth"
 							],
 							"path": [
-								"auth",
 								"login"
 							]
 						}
@@ -480,6 +592,8 @@
 							"script": {
 								"exec": [
 									"pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));\r",
+									"\r",
+									"\r",
 									"pm.test(\"Non-empty product array\", () => {\r",
 									"  const data = pm.response.json();\r",
 									"  pm.expect(data.length).to.be.above(0);\r",
@@ -495,14 +609,39 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://fakestoreapi.com/products",
-							"protocol": "https",
+							"raw": "{{storeURL}}products",
 							"host": [
-								"fakestoreapi",
-								"com"
-							],
-							"path": [
-								"products"
+								"{{storeURL}}products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Products - invalid url",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"pm.test(\"Status code is 404\", () => pm.response.to.have.status(404));\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{storeURL}}productss",
+							"host": [
+								"{{storeURL}}productss"
 							]
 						}
 					},
@@ -516,6 +655,8 @@
 							"script": {
 								"exec": [
 									"pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));\r",
+									"\r",
+									"\r",
 									"pm.test(\"Product has title\", () => {\r",
 									"  const data = pm.response.json();\r",
 									"  pm.expect(data).to.have.property(\"title\");\r",
@@ -531,14 +672,11 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://fakestoreapi.com/products/1",
-							"protocol": "https",
+							"raw": "{{storeURL}}products/1",
 							"host": [
-								"fakestoreapi",
-								"com"
+								"{{storeURL}}products"
 							],
 							"path": [
-								"products",
 								"1"
 							]
 						}
@@ -546,7 +684,7 @@
 					"response": []
 				},
 				{
-					"name": "Invalid Get Product By ID",
+					"name": "Get Product By invalid ID",
 					"event": [
 						{
 							"listen": "test",
@@ -578,14 +716,11 @@
 							}
 						},
 						"url": {
-							"raw": "https://fakestoreapi.com/products/211221",
-							"protocol": "https",
+							"raw": "{{storeURL}}products/211221",
 							"host": [
-								"fakestoreapi",
-								"com"
+								"{{storeURL}}products"
 							],
 							"path": [
-								"products",
 								"211221"
 							]
 						}
