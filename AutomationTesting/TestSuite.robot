@@ -124,7 +124,7 @@ Scenario 3
     ${new_window}=    Set Variable    ${window_handles}[1]
     Switch Window    ${new_window}
     ${new_url}=    Get Location
-    Run Keyword And Ignore Error    Wait Until Page Does Not Contain Element    ${CAPTCHA}    30s
+    Run Keyword And Ignore Error    Wait Until Page Does Not Contain Element    ${CAPTCHA}    50s
     Wait Until Page Contains Element    ${CART_NUMBER}    ${WAIT_TIMEOUT}
     ${cart_txt}=    Get Element Attribute    ${CART_NUMBER}    innerText
     ${cart_num}=    Convert To Integer    ${cart_txt}
@@ -211,16 +211,16 @@ Scenario 2
     ${count}=    Get Length    ${parents}
     Log To Console    \nFound ${count} products.
     FOR    ${index}    IN RANGE    1    ${count + 1}
-        ${spans}=    Get WebElements    (//div[@class='jr_kr'])[${index}]/span
-        ${price_parts}=    Create List
-        FOR    ${span}    IN    @{spans}
-            ${text}=    Get Text    ${span}
-            Run Keyword If    '${text}' != 'EGP' and '${text}' != ','    Append To List    ${price_parts}    ${text}
-        END
-        ${price}=    Evaluate    float(''.join(${price_parts}))
-        Log    Final Price: ${price} is valid
-        Should Be True    ${price} >= ${MIN_PRICE}
-        Should Be True    ${price} <= ${MAX_PRICE}
+    ${spans}=    Get WebElements    (//div[@class='jr_kr'])[${index}]/span
+    ${price_parts}=    Create List
+    FOR    ${span}    IN    @{spans}
+        ${text}=    Get Text    ${span}
+        Run Keyword If    '${text}' != 'EGP' and '${text}' != ','    Append To List    ${price_parts}    ${text}
+    END
+    ${price}=    Evaluate    float(''.join(${price_parts}))
+    Log    Final Price: ${price} is valid
+    Should Be True    ${price} >= ${MIN_PRICE}
+    Should Be True    ${price} <= ${MAX_PRICE}
     END
     # Validate input values still match
     ${min_price_value}=    Get Value    css=input[name="minPrice"]
@@ -270,7 +270,7 @@ Scenario 8
     ${window_handles}=    Get Window Handles
     ${new_window}=    Set Variable    ${window_handles}[1]
     Switch Window    ${new_window}
-    Run Keyword And Ignore Error    Wait Until Page Does Not Contain Element    ${CAPTCHA}
+    Run Keyword And Ignore Error    Wait Until Page Does Not Contain Element    ${CAPTCHA}    50s
     Wait Until Page Contains Element    ${DELIVERY_OPTIONS}    ${WAIT_TIMEOUT}
     Page Should Contain Element    xpath=//span[contains(text(), "United States")]
     ${currency}=    Get Text    ${CURRENCY_LABEL}
