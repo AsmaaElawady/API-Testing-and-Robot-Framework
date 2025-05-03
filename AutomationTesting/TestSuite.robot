@@ -1,5 +1,6 @@
 *** Settings ***
 Library           SeleniumLibrary
+Library           Collections
 
 *** Variables ***
 ${URL}            https://www.aliexpress.com/
@@ -33,6 +34,7 @@ ${MAX_PRICE}      1249
 ${LANG_MENU}      css:div.ship-to--menuItem--WdBDsYl
 ${LANG}           //*[@id="_full_container_header_23_"]/div[2]/div/div[2]/div[2]/div[2]/div[4]/div/div[1]/div
 ${EN_LANG}        //*[@id="_full_container_header_23_"]/div[2]/div/div[2]/div[2]/div[2]/div[4]/div/div[2]/div[2]
+${dummy}          1000
 
 *** Test Cases ***
 Scenario 1
@@ -186,7 +188,23 @@ Senario 2
     Wait Until Element Contains    css=span.hv_hx    EGP    10s
     Sleep    10s
     Wait Until Element Is Visible    css=div.i0_t    30s
-    # Validate that the minPrice and maxPrice fields contain the expected values
+    # Get all product price parent divs
+    ${parents}=    Get WebElements    css:div.jr_kr
+    ${count}=    Get Length    ${parents}
+    Log To Console    \nFound ${count} products.
+    FOR    ${index}    IN RANGE    1    ${count + 1}
+        ${spans}=    Get WebElements    (//div[@class='jr_kr'])[${index}]/span
+        ${price_parts}=    Create List
+        FOR    ${span}    IN    @{spans}
+            ${text}=    Get Text    ${span}
+            Run Keyword If    '${text}' != 'EGP' and '${text}' != ','    Append To List    ${price_parts}    ${text}
+        END
+        ${price}=    Evaluate    float(''.join(${price_parts}))
+        Log    Final Price: ${price}
+        Should Be True    ${price} >= ${MIN_PRICE}
+        Should Be True    ${price} <= ${MAX_PRICE}
+    END
+    # Validate input values still match
     ${min_price_value}=    Get Value    css=input[name="minPrice"]
     ${max_price_value}=    Get Value    css=input[name="maxPrice"]
     # Assert the values of the min and max price fields
