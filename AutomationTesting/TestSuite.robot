@@ -81,17 +81,19 @@ Scenario 6
     sleep    1s
     Click Element    ${USD_OPTION}
     sleep    1s
-    Wait Until Element Is Visible    ${SAVE_BTN}    ${WAIT_TIMEOUT} \
+    Wait Until Element Is Visible    ${SAVE_BTN}    ${WAIT_TIMEOUT}
     Click Element    ${SAVE_BTN}
     Wait Until Page Contains Element    ${CONFIRMATION}    timeout=5s
     sleep    7s
     Wait Until Element Is Visible    ${PRICEWITHUS}    timeout=10s
+    ${currency}=    Get Text    ${CURRENCY_LABEL}
+    Should Be Equal    ${currency}    USD
     ${price_elements}=    Get WebElements    ${PRICEWITHUS}
     Should Not Be Empty    ${price_elements}
     FOR    ${el}    IN    @{price_elements}
         ${price_text}=    Get Text    ${el}
-        Run Keyword If    '${price_text.strip()}' != ''    Should Contain    ${price_text}    $
-        Log    ${price_text}=
+        Run Keyword If    '${price_text.strip()}' != ''    Should Contain    ${price_text}    US $
+        Log    USD Price Found: ${price_text}
     END
     Close Browser
 
