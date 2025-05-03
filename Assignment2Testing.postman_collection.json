@@ -153,22 +153,79 @@
 				},
 				{
 					"name": "Get Single Cart",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response has user ID: \" + jsonData.userId, function () {\r",
+									"    pm.expect(jsonData).to.have.property(\"userId\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response has \" + jsonData.products.length + \" products\", function () {\r",
+									"    pm.expect(jsonData).to.have.property(\"products\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": ""
+							"raw": "https://fakestoreapi.com/carts/1",
+							"protocol": "https",
+							"host": [
+								"fakestoreapi",
+								"com"
+							],
+							"path": [
+								"carts",
+								"1"
+							]
 						}
 					},
 					"response": []
 				},
 				{
 					"name": "Get Single Cart - Bad",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"No cart returned in response body, because no cart with this id\", function () {\r",
+									"    let jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.eql(null); // assert the response body is null\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": ""
+							"raw": "https://fakestoreapi.com/carts/90",
+							"protocol": "https",
+							"host": [
+								"fakestoreapi",
+								"com"
+							],
+							"path": [
+								"carts",
+								"90"
+							]
 						}
 					},
 					"response": []
