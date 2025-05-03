@@ -42,7 +42,6 @@ Test Number - Method To test    - What to test -   result
    get all carts -  When it is requested to get all carts it should return non empty array of the carts- PASSED
 7- get all carts - when all carts are requested by an invalid URL it should return not found 404 - PASSED
 8- delete cart  - When it takes a valid cart ID to delete it should return 200   - PASSED
----------NOT ADDED YET---------------
    delete cart  - When it takes a valid cart ID to delete it should return the details of this cart   - PASSED 
 9- delete cart  - When it takes an invalid cart ID to delete it should return bad request 400   - PASSED
 10- create user - when it takes all parameters correctly it returns 200 - PASSED  
