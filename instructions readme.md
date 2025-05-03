@@ -58,32 +58,46 @@ Test Number - Method To test    - What to test -   result
    login user - when username is missing it should return status 400 - PASSED       
 
 
-| Test # | Method to Test     | What to Test                                                                 | Result  |
-|--------|---------------------|------------------------------------------------------------------------------|------------|
-| 1      | Create Cart         | When it takes all parameters correctly, it returns 201                       | ❌ FAILED |
-|        |                     | When it takes all parameters correctly, it returns the cart ID created       | ✅ PASSED |
-| 2      | Create Cart         | When it doesn't take product list, it returns 400                            | ✅ PASSED |
-|        |                     | Should detect that there is no product list sent                             | ✅ PASSED |
-| 3      | Create Cart         | When it takes an empty product list, it returns 400                          | ❌ FAILED |
-|        |                     | Should detect that the list is empty                                         | ✅ PASSED |
-| 4      | Get Single Cart     | With valid cart ID, should return 200                                        | ✅ PASSED |
-|        |                     | Should return the correct cart with the same ID                              | ✅ PASSED |
-|        |                     | Should return the products in this cart                                      | ✅ PASSED |
-| 5      | Get Single Cart     | With invalid cart ID, should return NULL                                     | ✅ PASSED |
-| 6      | Get All Carts       | Should return 200 when all carts are requested                               | ✅ PASSED |
-|        |                     | Should return non-empty array of carts                                       | ✅ PASSED |
-| 7      | Get All Carts       | With invalid URL, should return 404 Not Found                                | ✅ PASSED |
-| 8      | Delete Cart         | With valid cart ID, should return 200                                        | ✅ PASSED |
-| 9      | Delete Cart         | With invalid cart ID, should return 400 Bad Request                          | ✅ PASSED |
-
-| 10     | Create User         | When it takes all parameters correctly, it returns 200                       | ✅ PASSED |
-|        |                     | When it takes all parameters correctly, it returns a user ID                 | ✅ PASSED |
-|        |                     | Should return a numeric user ID                                              | ✅ PASSED |
-|        |                     | When a request with missing fields is sent, it returns 400                   | ✅ PASSED |
-|        | Create User         | Should detect that the there is a missing field                              | ✅ PASSED |
-| 11     | Get All Users       | When the request is valid, it returns status 200                             | ✅ PASSED |
-|        |                     | Should return a non-empty array of users                                     | ✅ PASSED |
-|        | Get All Users       | With invalid URL, should return status 404                                   | ✅ PASSED |
-| 12     | Login User          | With correct username and password, should return status 200                 | ✅ PASSED |
-|        |                     | With valid credentials, should return a token                                | ✅ PASSED |
-|        |                     | When username is missing, should return status 400                           | ✅ PASSED |
+| Test # | Method to Test     | What to Test                                                                           | Result  |
+|--------|---------------------|-------------------------------------------------------------------------------------|------------|
+                                                            CART TEST CASES   
+|---------------------------------------------------------------------------------------------------------------------------------|
+| 1      | Create Cart         | When it takes all parameters correctly, it returns 201                              | ❌ FAILED |
+|        |                     | When it takes all parameters correctly, it returns the cart ID created              | ✅ PASSED |
+| 2      | Create Cart         | When it doesn't take product list, it returns 400                                   | ✅ PASSED |
+|        |                     | Should detect that there is no product list sent                                    | ✅ PASSED |
+| 3      | Create Cart         | When it takes an empty product list, it returns 400                                 | ❌ FAILED |
+|        |                     | Should detect that the list is empty                                                | ✅ PASSED |
+| 4      | Get Single Cart     | With valid cart ID, should return 200                                               | ✅ PASSED |
+|        |                     | Should return the correct cart with the same ID                                     | ✅ PASSED |
+|        |                     | Should return the products in this cart                                             | ✅ PASSED |
+| 5      | Get Single Cart     | With invalid cart ID, should return NULL                                            | ✅ PASSED |
+| 6      | Get All Carts       | Should return 200 when all carts are requested                                      | ✅ PASSED |
+|        |                     | Should return non-empty array of carts                                              | ✅ PASSED |
+| 7      | Get All Carts       | With invalid URL, should return 404 Not Found                                       | ✅ PASSED |
+| 8      | Delete Cart         | With valid cart ID, should return 200                                               | ✅ PASSED |
+| 9      | Delete Cart         | With invalid cart ID, should return 400 Bad Request                                 | ✅ PASSED |
+|---------------------------------------------------------------------------------------------------------------------------------|
+                                                            USER TEST CASES   
+|---------------------------------------------------------------------------------------------------------------------------------|
+| 10     | Create User         | When it takes all parameters correctly, it returns 200                              | ✅ PASSED |
+|        |                     | When it takes all parameters correctly, it returns a user ID                        | ✅ PASSED |
+|        |                     | Should return a numeric user ID                                                     | ✅ PASSED |
+|        |                     | When a request with missing fields is sent, it returns 400                          | ✅ PASSED |
+|        | Create User         | Should detect that the there is a missing field                                     | ✅ PASSED |
+| 11     | Get All Users       | When the request is valid, it returns status 200                                    | ✅ PASSED |
+|        |                     | Should return a non-empty array of users                                            | ✅ PASSED |
+|        | Get All Users       | With invalid URL, should return status 404                                          | ✅ PASSED |
+| 12     | Login User          | With correct username and password, should return status 200                        | ✅ PASSED |
+|        |                     | With valid credentials, should return a token                                       | ✅ PASSED |
+|        | Login User          | When username is missing, should return status 400                                  | ✅ PASSED |
+|---------------------------------------------------------------------------------------------------------------------------------|
+                                                            PRODUCT TEST CASES   
+|---------------------------------------------------------------------------------------------------------------------------------|
+| 13     | get all product     | when requested to get all products, it should return status 200                     | ✅ PASSED |
+|        |                     | when requested to get all products, it should return non empty array of products    | ✅ PASSED |
+| 14     | get all product     | when requested to get all products by wrong URL it should return not found 404      | ✅ PASSED |
+| 15     | get product by ID   | when requested to get a product with a valid ID, it should return status 200        | ✅ PASSED |
+|        |                     | when requested to get a product with a valid ID, it should returns product details  | ✅ PASSED |
+| 16     | get product by ID   | when requested to get a product with an invalid ID, it should return empty body     | ✅ PASSED |
+|---------------------------------------------------------------------------------------------------------------------------------|
