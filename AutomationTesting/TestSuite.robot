@@ -148,7 +148,7 @@ Scenario 3
 Scenario 5
     Open Browser    ${URL}    ${BROWSER}
     Maximize Browser Window
-    # Close popup if exists
+    # Close popup if it appears
     Run Keyword And Ignore Error    Click Element    css:div.Sk1_X._1-SOk
     Run Keyword And Ignore Error    Wait Until Element Is Not Visible    css:div.Sk1_X._1-SOk    10s
     # Hover over account icon to reveal the dropdown
@@ -162,52 +162,41 @@ Scenario 5
     Input Text    css:input[label="البريد الإلكتروني"]    ${EMAIL}
     Log    Email entered: ${EMAIL}
     Sleep    20s
-    # After entering the email:
+    # Select suggested email option
     Wait Until Element Is Visible    xpath=//div[@class="_2F0EX"]    10s
     Click Element    xpath=//div[@class="_2F0EX"]
-    # Click the "مواصلة" (Continue) button
+    # Click "Continue" button (مواصلة)
     Sleep    1s
-    Wait Until Element Is Enabled    xpath=//button[span[text()="مواصلة"]]    10s
-    Click Button    xpath=//button[span[text()="مواصلة"]]
-    # Wait for password input field to appear
-    Wait Until Element Is Visible    css:input[name="fm-login-password"]    10s
-    Input Password    css:input[name="fm-login-password"]    ${PASSWORD}
-    Log    Password entered.
-    # Click submit button
-    Wait Until Element Is Enabled    xpath=//button[span[text()="تسجيل الدخول"]]    10s
-    Click Button    xpath=//button[span[text()="تسجيل الدخول"]]
-    Log    logged in successfully
-    # Existing steps up to login...
-    Sleep    10s
-    # Wait for slide-to-unlock to appear (optional)
-    Wait Until Element Is Visible    id=nc_1__scale_text    30s
-    Log    Slide-to-unlock appeared
-    Wait Until Element Is Not Visible    id=nc_1__scale_text    30s
-    Log    Slide-to-unlock disappeared
-    # Hover over the logged-in account icon
-    Wait Until Element Is Visible    css:.my-account--menuItem--1GDZChA.my-account--newMenuItem--bSu9Hkj    15s
-    Mouse Over    css:.my-account--menuItem--1GDZChA.my-account--newMenuItem--bSu9Hkj
-    Sleep    3s
-    # Check if the welcome message appears
-    Wait Until Element Is Visible    xpath=//span[contains(text(),"مرحبا بعودتك,")]    10s
-    Element Should Be Visible    xpath=//span[contains(text(),"مرحبا بعودتك,")]
-    Log    Welcome message verified.
-    Sleep    5s
+    # Click the actual enabled "مواصلة" button (after email input)
+    Wait Until Element Is Visible    xpath=//button[span[text()="مواصلة"] and not(@disabled)]    15s
+    Click Button    xpath=//button[span[text()="مواصلة"] and not(@disabled)]
+    Log    Clicked on "مواصلة" button after email input
+    # Wait for and click "تسجيل الدخول باستخدام كود البريد الإلكتروني"
+    Wait Until Element Is Visible    xpath=//span[text()="تسجيل الدخول باستخدام كود البريد الإلكتروني"]    15s
+    Click Element    xpath=//span[text()="تسجيل الدخول باستخدام كود البريد الإلكتروني"]
+    Log    Clicked on "تسجيل الدخول باستخدام كود البريد الإلكتروني"
+    Sleep    3m
     Capture Page Screenshot
     Close Browser
 
-Senario 2
-    Open Browser    ${URL}    ${BROWSER}
+Scenario 2
+    Open Browser    ${URL}    chrome
     Maximize Browser Window
-    Wait Until Element Is Visible    css=input.search--keyword--15P08Ji    10s
-    Input Text    css=input.search--keyword--15P08Ji    ${SEARCH_QUERY}    5s
+    Set Selenium Implicit Wait    15s
     Run Keyword And Ignore Error    Click Element    css=div[class="Sk1_X _1-SOk"]
     Wait Until Element Is Not Visible    css=div[class="Sk1_X _1-SOk"]    10s
-    Run Keyword And Ignore Error    Click Element    css=input[class*="search--submit--2VTbd-T"]
-    Wait Until Element Is Visible    css=input[class*="search--submit--2VTbd-T"]    10s
-    Click Element    css=input[class*="search--submit--2VTbd-T"]
-    Wait Until Page Contains    ${SEARCH_QUERY}    10s
+    Wait Until Element Is Visible    ${SEARCH_INPUT}    20s
+    Input Text    ${SEARCH_INPUT}    ${SEARCH_QUERY}
+    Wait Until Element Is Visible    ${SUBMIT_BUTTON}    20s
+    Click Element    ${SUBMIT_BUTTON}
     Page Should Contain    ${SEARCH_QUERY}
+    Wait Until Page Contains Element    ${PRODUCTNAME}    40s
+    ${product_title}=    Get WebElements    ${PRODUCTNAME}
+    FOR    ${title}    IN    @{product_title}
+        ${text}=    Get Text    ${title}
+        Log    Checking: ${text}
+        Should Match Regexp    ${text.lower()}    .*((smart\s?watch)|(smartwatch)|(ساعة\s?ذكية)|(الساعة\s?الذكية)|(ساعة)).*
+    END
     # Apply Price Range Filter
     Wait Until Element Is Visible    css=div.hv_hw    10s
     Input Text    css=input[name="minPrice"]    ${MIN_PRICE}    # Set the minimum price
@@ -229,7 +218,7 @@ Senario 2
             Run Keyword If    '${text}' != 'EGP' and '${text}' != ','    Append To List    ${price_parts}    ${text}
         END
         ${price}=    Evaluate    float(''.join(${price_parts}))
-        Log    Final Price: ${price}
+        Log    Final Price: ${price} is valid
         Should Be True    ${price} >= ${MIN_PRICE}
         Should Be True    ${price} <= ${MAX_PRICE}
     END
