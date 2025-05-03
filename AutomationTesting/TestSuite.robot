@@ -3,7 +3,7 @@ Library           SeleniumLibrary
 Library           Collections
 
 *** Variables ***
-${URL}            https://www.aliexpress.com/
+${URL}            https://www.aliexpress.com/?lan=en
 ${BROWSER}        chrome
 ${CLOSE_POPUP_BUTTON}    css=button[class*="close"]
 ${ACCEPT_COOKIES_BUTTON}    css=button[class*="accept-btn"]
@@ -34,28 +34,41 @@ ${MAX_PRICE}      1249
 ${LANG_MENU}      css:div.ship-to--menuItem--WdBDsYl
 ${LANG}           //*[@id="_full_container_header_23_"]/div[2]/div/div[2]/div[2]/div[2]/div[4]/div/div[1]/div
 ${EN_LANG}        //*[@id="_full_container_header_23_"]/div[2]/div/div[2]/div[2]/div[2]/div[4]/div/div[2]/div[2]
+${PRODUCTNAME}    xpath=//h3
+${PRICEWITHUS}    xpath=//span[contains(text(), '$')]
+${SHIP_COUNTRY_DROPDOWN}    xpath=(//div[contains(@class, 'select--wrap--3N7DHe_')])[1]
+${UNITED_STATES}    xpath=(//div[contains(@class, 'select--item--32FADYB')])[1]
+${CURRENCY_LABEL}    xpath=//div[contains(@class, 'ship-to--text--3H_PaoC')]//b
+${RANDOM_PRODUCT}    xpath=//div[contains(@class, '_2FypS')][1]//div
+${DELIVERY_OPTIONS}    css=span.delivery-v2--to--Mtweg7y
+${PRODUCT_PRICE}    css=span.product-price-value
+${CART_NUMBER}    css=span.shop-cart--number--axE62FE
+${QUANTITY_INPUT}    css=input.comet-v2-input-number-input
 ${dummy}          1000
 
 *** Test Cases ***
 Scenario 1
-    Open Browser    ${URL}    ${BROWSER}
+    Open Browser    ${URL}    chrome
     Maximize Browser Window
-    Run Keyword And Ignore Error    Click Element    ${CLOSE_POPUP_BUTTON}
-    Run Keyword And Ignore Error    Click Element    ${ACCEPT_COOKIES_BUTTON}
-    Wait Until Element Is Visible    ${SEARCH_INPUT}    ${WAIT_TIMEOUT}
+    Set Selenium Implicit Wait    15s
+    Wait Until Element Is Visible    ${SEARCH_INPUT}    20s
     Input Text    ${SEARCH_INPUT}    ${SEARCH_QUERY}
-    sleep    7
-    Wait Until Element Is Visible    ${SUBMIT_BUTTON}    ${WAIT_TIMEOUT}
+    Wait Until Element Is Visible    ${SUBMIT_BUTTON}    20s
     Click Element    ${SUBMIT_BUTTON}
-    Wait Until Page Contains    ${SEARCH_QUERY}    ${WAIT_TIMEOUT}
     Page Should Contain    ${SEARCH_QUERY}
-    sleep    7
+    Wait Until Page Contains Element    ${PRODUCTNAME}    40s
+    ${product_title}=    Get WebElements    ${PRODUCTNAME}
+    FOR    ${title}    IN    @{product_title}
+        ${text}=    Get Text    ${title}
+        Log    Checking: ${text}
+        Should Match Regexp    ${text.lower()}    .*((smart\s?watch)|(smartwatch)|(ساعة\s?ذكية)|(الساعة\s?الذكية)|(ساعة)).*
+    END
     Close Browser
 
 Scenario 6
-    Open Browser    ${URL}    ${BROWSER}
+    Open Browser    ${URL}    Chrome
     Maximize Browser Window
-    Set Selenium Implicit Wait    15s
+    Set Selenium Implicit Wait    ${WAIT_TIMEOUT}
     ${popup_visible}=    Run Keyword And Return Status    Element Should Be Visible    ${POPUP_SELECTOR}
     Run Keyword If    ${popup_visible}    Click Element    ${POPUP_CLOSE_BTN}
     Sleep    2s
@@ -67,11 +80,18 @@ Scenario 6
     sleep    1s
     Click Element    ${USD_OPTION}
     sleep    1s
-    Wait Until Element Is Visible    ${SAVE_BTN}    ${WAIT_TIMEOUT}
+    Wait Until Element Is Visible    ${SAVE_BTN}    ${WAIT_TIMEOUT} \
     Click Element    ${SAVE_BTN}
-    Wait Until Page Contains Element    ${CONFIRMATION}    ${WAIT_TIMEOUT}
-    Reload Page
+    Wait Until Page Contains Element    ${CONFIRMATION}    timeout=5s
     sleep    7s
+    Wait Until Element Is Visible    ${PRICEWITHUS}    timeout=10s
+    ${price_elements}=    Get WebElements    ${PRICEWITHUS}
+    Should Not Be Empty    ${price_elements}
+    FOR    ${el}    IN    @{price_elements}
+        ${price_text}=    Get Text    ${el}
+        Run Keyword If    '${price_text.strip()}' != ''    Should Contain    ${price_text}    $
+        Log    ${price_text}=
+    END
     Close Browser
 
 Scenario 7
@@ -105,8 +125,17 @@ Scenario 3
     Switch Window    ${new_window}
     ${new_url}=    Get Location
     Run Keyword And Ignore Error    Wait Until Page Does Not Contain Element    ${CAPTCHA}    30s
+    Wait Until Page Contains Element    ${CART_NUMBER}    ${WAIT_TIMEOUT}
+    ${cart_txt}=    Get Element Attribute    ${CART_NUMBER}    innerText
+    ${cart_num}=    Convert To Integer    ${cart_txt}
     Wait Until Page Contains Element    ${ADD_TO_CART_BTN}    ${WAIT_TIMEOUT}
     Click Element    ${ADD_TO_CART_BTN}
+    ${quantity}=    Get Element Attribute    ${QUANTITY_INPUT}    value
+    ${quantity_num}=    Convert To Integer    ${quantity}
+    ${new_cart_num}=    Evaluate    ${cart_num} + ${quantity_num}
+    ${curr_cart_txt}=    Get Element Attribute    ${CART_NUMBER}    innerText
+    ${curr_cart_num}=    Convert To Integer    ${curr_cart_txt}
+    #Should Be Equal As Numbers    ${curr_cart_num}    ${new_cart_num}
     ${title_item}    Get WebElement    ${PRODUCT_TITLE}
     ${title_text}    Get Text    ${title_item}
     Log To Console    Selected item title: ${title_text}
@@ -148,7 +177,7 @@ Scenario 5
     Wait Until Element Is Enabled    xpath=//button[span[text()="تسجيل الدخول"]]    10s
     Click Button    xpath=//button[span[text()="تسجيل الدخول"]]
     Log    logged in successfully
-        # Existing steps up to login...
+    # Existing steps up to login...
     Sleep    10s
     # Wait for slide-to-unlock to appear (optional)
     Wait Until Element Is Visible    id=nc_1__scale_text    30s
@@ -228,3 +257,37 @@ Scenario4
     #Click the save button
     Click Element    xpath=//div[contains(text(), 'حفظ')]
     Sleep    7s
+
+Scenario 8
+    Open Browser    ${URL}    ${BROWSER}
+    Maximize Browser Window
+    Set Selenium Implicit Wait    15s
+    ${popup_visible}=    Run Keyword And Return Status    Element Should Be Visible    ${POPUP_SELECTOR}
+    Run Keyword If    ${popup_visible}    Click Element    ${POPUP_CLOSE_BTN}
+    Wait Until Page Contains Element    ${CURRENCY_INDICATOR}    ${WAIT_TIMEOUT}
+    Scroll Element Into View    ${CURRENCY_INDICATOR}
+    Click Element    ${CURRENCY_INDICATOR}
+    Click Element    ${SHIP_COUNTRY_DROPDOWN}
+    Sleep    2s
+    Click Element    ${UNITED_STATES}
+    Sleep    2s
+    Click Element    ${SAVE_BTN}
+    Wait Until Page Contains Element    ${CURRENCY_LABEL}    ${WAIT_TIMEOUT}
+    #${currency}=    Get Text    ${CURRENCY_LABEL}
+    #Log    ${currency}    #check currency
+    #Should Be Equal    ${currency}    USD    # check currency
+    Wait Until Page Contains Element    ${RANDOM_PRODUCT}    ${WAIT_TIMEOUT}
+    Click Element    ${RANDOM_PRODUCT}
+    ${window_handles}=    Get Window Handles
+    ${new_window}=    Set Variable    ${window_handles}[1]
+    Switch Window    ${new_window}
+    Run Keyword And Ignore Error    Wait Until Page Does Not Contain Element    ${CAPTCHA}
+    Wait Until Page Contains Element    ${DELIVERY_OPTIONS}    ${WAIT_TIMEOUT}
+    Page Should Contain Element    xpath=//span[contains(text(), "United States")]
+    ${currency}=    Get Text    ${CURRENCY_LABEL}
+    Should Be Equal    ${currency}    USD    # check currency
+    ${product_price}=    Get Text    ${PRODUCT_PRICE}
+    Should Contain    ${product_price}    $    #check that price in dollar
+    Click Element    ${DELIVERY_OPTIONS}
+    Sleep    3s
+    Close Browser

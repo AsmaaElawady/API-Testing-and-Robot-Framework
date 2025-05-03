@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "b3f604ba-a131-418e-8a28-6b78cb52ba7a",
+		"_postman_id": "a36eb8b2-1812-4e80-bb52-8a2ee08dea7b",
 		"name": "Assignment2Testing",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "31618473"
+		"_exporter_id": "32043495"
 	},
 	"item": [
 		{
@@ -13,7 +13,10 @@
 					"name": "Create Cart",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": ""
+						}
 					},
 					"response": []
 				},
@@ -21,7 +24,10 @@
 					"name": "Create Cart - Bad",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": ""
+						}
 					},
 					"response": []
 				},
@@ -29,7 +35,10 @@
 					"name": "Get Single Cart",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": ""
+						}
 					},
 					"response": []
 				},
@@ -37,7 +46,10 @@
 					"name": "Get Single Cart - Bad",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": ""
+						}
 					},
 					"response": []
 				}
@@ -63,7 +75,6 @@
 									"    pm.expect(jsonData).to.have.property(\"id\");\r",
 									"});\r",
 									"\r",
-									"// ✅ Display the user ID in Test Results\r",
 									"pm.test(\"Created User ID: \" + jsonData.id, function () {\r",
 									"    pm.expect(jsonData.id).to.be.a(\"number\");\r",
 									"});\r",
@@ -89,7 +100,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"id\":0,\r\n  \"username\": \"Asmaa Elawady\",\r\n  \"email\": \"asmaa23@gmail.com\",\r\n  \"password\": \"1234\"\r\n}",
+							"raw": "{\r\n  \"id\":1,\r\n  \"username\": \"Asmaa Elawady\",\r\n  \"email\": \"asmaa23@gmail.com\",\r\n  \"password\": \"1234\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
