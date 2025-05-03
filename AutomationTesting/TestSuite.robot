@@ -85,6 +85,8 @@ Scenario 6
     Wait Until Page Contains Element    ${CONFIRMATION}    timeout=5s
     sleep    7s
     Wait Until Element Is Visible    ${PRICEWITHUS}    timeout=10s
+     ${currency}=     Get Text     ${CURRENCY_LABEL}
+    Should Be Equal    ${currency}    USD
     ${price_elements}=    Get WebElements    ${PRICEWITHUS}
     Should Not Be Empty    ${price_elements}
     FOR    ${el}    IN    @{price_elements}
