@@ -239,3 +239,37 @@ Scenario4
     #Click the save button
     Click Element    xpath=//div[contains(text(), 'حفظ')]
     Sleep    7s
+
+Scenario 8
+    Open Browser    ${URL}    ${BROWSER}
+    Maximize Browser Window
+    Set Selenium Implicit Wait    15s
+    ${popup_visible}=    Run Keyword And Return Status    Element Should Be Visible    ${POPUP_SELECTOR}
+    Run Keyword If    ${popup_visible}    Click Element    ${POPUP_CLOSE_BTN}
+    Wait Until Page Contains Element    ${CURRENCY_INDICATOR}    ${WAIT_TIMEOUT}
+    Scroll Element Into View    ${CURRENCY_INDICATOR}
+    Click Element    ${CURRENCY_INDICATOR}
+    Click Element    ${SHIP_COUNTRY_DROPDOWN}
+    Sleep    2s
+    Click Element    ${UNITED_STATES}
+    Sleep    2s
+    Click Element    ${SAVE_BTN}
+    Wait Until Page Contains Element    ${CURRENCY_LABEL}    ${WAIT_TIMEOUT}
+    #${currency}=    Get Text    ${CURRENCY_LABEL}
+    #Log    ${currency}    #check currency
+    #Should Be Equal    ${currency}    USD    # check currency
+    Wait Until Page Contains Element    ${RANDOM_PRODUCT}    ${WAIT_TIMEOUT}
+    Click Element    ${RANDOM_PRODUCT}
+    ${window_handles}=    Get Window Handles
+    ${new_window}=    Set Variable    ${window_handles}[1]
+    Switch Window    ${new_window}
+    Run Keyword And Ignore Error    Wait Until Page Does Not Contain Element    ${CAPTCHA}
+    Wait Until Page Contains Element    ${DELIVERY_OPTIONS}    ${WAIT_TIMEOUT}
+    Page Should Contain Element    xpath=//span[contains(text(), "United States")]
+    ${currency}=    Get Text    ${CURRENCY_LABEL}
+    Should Be Equal    ${currency}    USD    # check currency
+    ${product_price}=    Get Text    ${PRODUCT_PRICE}
+    Should Contain    ${product_price}    $    #check that price in dollar
+    Click Element    ${DELIVERY_OPTIONS}
+    Sleep    3s
+    Close Browser
