@@ -42,19 +42,18 @@ Test Number - Method To test    - What to test -   result
    get all carts -  When it is requested to get all carts it should return non empty array of the carts- PASSED
 7- get all carts - when all carts are requested by an invalid URL it should return not found 404 - PASSED
 8- delete cart  - When it takes a valid cart ID to delete it should return 200   - PASSED
-   delete cart  - When it takes a valid cart ID to delete it should return the details of this cart   - PASSED 
 9- delete cart  - When it takes an invalid cart ID to delete it should return bad request 400   - PASSED
 10- create user - when it takes all parameters correctly it returns 200 - PASSED  
    create user - when it takes all parameters correctly it returns a user ID - PASSED  
    create user - when it takes all parameters correctly it should return a numeric user ID - PASSED 
-   create user - when it sends a request with missing fields it should return 400 - PASSED  
+11- create user - when it sends a request with missing fields it should return 400 - PASSED  
    create user - when the password is missing it should detect the missing field - PASSED 
-11- get all users - when the request is valid it should return status 200 - PASSED  
+12- get all users - when the request is valid it should return status 200 - PASSED  
     get all users - when the request is valid it should return a non-empty array of users - PASSED 
-    get all users - when requested with an invalid URL it should return status 404 - PASSED  
-12- login user - when correct username and password are provided it should return status 200 - PASSED  
+13- get all users - when requested with an invalid URL it should return status 404 - PASSED  
+14- login user - when correct username and password are provided it should return status 200 - PASSED  
    login user - when correct credentials are provided it should return a token - PASSED   
-   login user - when username is missing it should return status 400 - PASSED       
+15- login user - when username is missing it should return status 400 - PASSED       
 
 
 | Test # | Method to Test     | What to Test                                                                           | Result  |
