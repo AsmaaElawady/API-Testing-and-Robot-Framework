@@ -45,6 +45,7 @@ ${PRODUCT_PRICE}    css=span.product-price-value
 ${CART_NUMBER}    css=span.shop-cart--number--axE62FE
 ${QUANTITY_INPUT}    css=input.comet-v2-input-number-input
 ${dummy}          1000
+${PRICE_SPANS}    css=span.jc_cz
 
 *** Test Cases ***
 Scenario 1
@@ -85,7 +86,7 @@ Scenario 6
     Wait Until Page Contains Element    ${CONFIRMATION}    timeout=5s
     sleep    7s
     Wait Until Element Is Visible    ${PRICEWITHUS}    timeout=10s
-     ${currency}=     Get Text     ${CURRENCY_LABEL}
+    ${currency}=    Get Text    ${CURRENCY_LABEL}
     Should Be Equal    ${currency}    USD
     ${price_elements}=    Get WebElements    ${PRICEWITHUS}
     Should Not Be Empty    ${price_elements}
@@ -264,8 +265,14 @@ Scenario 8
     Sleep    2s
     Click Element    ${SAVE_BTN}
     Wait Until Page Contains Element    ${CURRENCY_LABEL}    ${WAIT_TIMEOUT}
-    #${currency}=    Get Text    ${CURRENCY_LABEL}
-    #Log    ${currency}    #check currency
+    ${currency}=    Get Text    ${CURRENCY_LABEL}
+    Log    ${currency}    #check currency
+    ${spans}    Get WebElements    ${PRICE_SPANS}
+    FOR    ${span}    IN    @{spans}
+        ${price_text}=    Get Text    ${span}
+        Run Keyword If    '${price_text.strip()}' != ''    Should Contain    ${price_text}    $
+        Log    ${price_text}=
+    END
     #Should Be Equal    ${currency}    USD    # check currency
     Wait Until Page Contains Element    ${RANDOM_PRODUCT}    ${WAIT_TIMEOUT}
     Click Element    ${RANDOM_PRODUCT}
