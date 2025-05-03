@@ -35,6 +35,14 @@ ${LANG}           //*[@id="_full_container_header_23_"]/div[2]/div/div[2]/div[2]
 ${EN_LANG}        //*[@id="_full_container_header_23_"]/div[2]/div/div[2]/div[2]/div[2]/div[4]/div/div[2]/div[2]
 ${PRODUCTNAME}    xpath=//h3
 ${PRICEWITHUS}    xpath=//span[contains(text(), '$')]
+${SHIP_COUNTRY_DROPDOWN}    xpath=(//div[contains(@class, 'select--wrap--3N7DHe_')])[1]
+${UNITED_STATES}    xpath=(//div[contains(@class, 'select--item--32FADYB')])[1]
+${CURRENCY_LABEL}    xpath=//div[contains(@class, 'ship-to--text--3H_PaoC')]//b
+${RANDOM_PRODUCT}    xpath=//div[contains(@class, '_2FypS')][1]//div
+${DELIVERY_OPTIONS}    css=span.delivery-v2--to--Mtweg7y
+${PRODUCT_PRICE}    css=span.product-price-value
+${CART_NUMBER}    css=span.shop-cart--number--axE62FE
+${QUANTITY_INPUT}    css=input.comet-v2-input-number-input
 
 *** Test Cases ***
 Scenario 1
@@ -46,7 +54,7 @@ Scenario 1
     Wait Until Element Is Visible    ${SUBMIT_BUTTON}    20s
     Click Element    ${SUBMIT_BUTTON}
     Page Should Contain    ${SEARCH_QUERY}
-    Wait Until Page Contains Element    ${PRODUCTNAME}     40s
+    Wait Until Page Contains Element    ${PRODUCTNAME}    40s
     ${product_title}=    Get WebElements    ${PRODUCTNAME}
     FOR    ${title}    IN    @{product_title}
         ${text}=    Get Text    ${title}
@@ -115,8 +123,17 @@ Scenario 3
     Switch Window    ${new_window}
     ${new_url}=    Get Location
     Run Keyword And Ignore Error    Wait Until Page Does Not Contain Element    ${CAPTCHA}    30s
+    Wait Until Page Contains Element    ${CART_NUMBER}    ${WAIT_TIMEOUT}
+    ${cart_txt}=    Get Element Attribute    ${CART_NUMBER}    innerText
+    ${cart_num}=    Convert To Integer    ${cart_txt}
     Wait Until Page Contains Element    ${ADD_TO_CART_BTN}    ${WAIT_TIMEOUT}
     Click Element    ${ADD_TO_CART_BTN}
+    ${quantity}=    Get Element Attribute    ${QUANTITY_INPUT}    value
+    ${quantity_num}=    Convert To Integer    ${quantity}
+    ${new_cart_num}=    Evaluate    ${cart_num} + ${quantity_num}
+    ${curr_cart_txt}=    Get Element Attribute    ${CART_NUMBER}    innerText
+    ${curr_cart_num}=    Convert To Integer    ${curr_cart_txt}
+    #Should Be Equal As Numbers    ${curr_cart_num}    ${new_cart_num}
     ${title_item}    Get WebElement    ${PRODUCT_TITLE}
     ${title_text}    Get Text    ${title_item}
     Log To Console    Selected item title: ${title_text}
