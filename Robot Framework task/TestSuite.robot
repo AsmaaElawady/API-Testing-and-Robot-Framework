@@ -39,13 +39,13 @@ ${PRICEWITHUS}    xpath=//span[contains(text(), '$')]
 ${SHIP_COUNTRY_DROPDOWN}    xpath=(//div[contains(@class, 'select--wrap--3N7DHe_')])[1]
 ${UNITED_STATES}    xpath=(//div[contains(@class, 'select--item--32FADYB')])[1]
 ${CURRENCY_LABEL}    xpath=//div[contains(@class, 'ship-to--text--3H_PaoC')]//b
-${RANDOM_PRODUCT}    xpath=//div[contains(@class, '_2FypS')][1]//div
+${RANDOM_PRODUCT}    xpath=//div[contains(@class, '_2FypS')][2]//div
 ${DELIVERY_OPTIONS}    css=span.delivery-v2--to--Mtweg7y
 ${PRODUCT_PRICE}    css=span.product-price-value
 ${CART_NUMBER}    css=span.shop-cart--number--axE62FE
 ${QUANTITY_INPUT}    css=input.comet-v2-input-number-input
 ${dummy}          1000
-${PRICE_SPANS}    xpath=//div[@class='U-S0j']//span[contains(text(), '$')]
+${PRICE_SPANS}    xpath=//div[@class='_3Mpbo']//span[contains(text(), '$')]
 
 *** Test Cases ***
 Scenario 1
